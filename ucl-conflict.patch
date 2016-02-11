@@ -1,0 +1,96 @@
+diff -aur libucl-0.7.3-old/libucl.pc.in libucl-0.7.3/libucl.pc.in
+--- libucl-0.7.3-old/libucl.pc.in	2016-02-11 14:10:25.125564925 -0500
++++ libucl-0.7.3/libucl.pc.in	2016-02-11 14:11:00.706566647 -0500
+@@ -6,6 +6,6 @@
+ Name: LibUCL
+ Description: Universal configuration library
+ Version: @UCL_VERSION@
+-Libs: -L${libdir} -lucl
++Libs: -L${libdir} -lucl-config
+ Libs.private: @LIBS_EXTRA@ @LUA_LIB@
+ Cflags: -I${includedir}/
+diff -aur libucl-0.7.3-old/lua/Makefile.am libucl-0.7.3/lua/Makefile.am
+--- libucl-0.7.3-old/lua/Makefile.am	2016-02-11 14:10:25.126564925 -0500
++++ libucl-0.7.3/lua/Makefile.am	2016-02-11 14:11:00.707566647 -0500
+@@ -7,7 +7,7 @@
+ ucl_la_CFLAGS=	$(ucl_common_cflags) \
+ 					@LUA_INCLUDE@
+ ucl_la_LDFLAGS = -module -export-dynamic -avoid-version
+-ucl_la_LIBADD=	$(top_srcdir)/src/libucl.la \
++ucl_la_LIBADD=	$(top_srcdir)/src/libucl-config.la \
+ 					@LIBFETCH_LIBS@ \
+ 					@LIBCRYPTO_LIB@ \
+ 					@LIBREGEX_LIB@ \
+@@ -23,4 +23,4 @@
+ 
+ $(ROCKSPEC): $(PACKAGE).rockspec dist
+ 	sed -e 's/@MD5@/'`$(MD5SUM) $(distdir).tar.gz | \
+-	cut -d " " -f 1`'/g' < $(PACKAGE).rockspec > $@
+\ No newline at end of file
++	cut -d " " -f 1`'/g' < $(PACKAGE).rockspec > $@
+diff -aur libucl-0.7.3-old/src/Makefile.am libucl-0.7.3/src/Makefile.am
+--- libucl-0.7.3-old/src/Makefile.am	2016-02-11 14:10:25.126564925 -0500
++++ libucl-0.7.3/src/Makefile.am	2016-02-11 14:11:00.707566647 -0500
+@@ -3,8 +3,8 @@
+ 			-I$(top_srcdir)/uthash \
+ 			-I$(top_srcdir)/klib \
+ 			-Wall -W -Wno-unused-parameter -Wno-pointer-sign
+-lib_LTLIBRARIES=	libucl.la
+-libucl_la_SOURCES=	ucl_emitter.c \
++lib_LTLIBRARIES=	libucl-config.la
++libucl_config_la_SOURCES=	ucl_emitter.c \
+ 					ucl_emitter_streamline.c \
+ 					ucl_emitter_utils.c \
+ 					ucl_hash.c \
+@@ -12,10 +12,10 @@
+ 					ucl_schema.c \
+ 					ucl_util.c \
+ 					xxhash.c
+-libucl_la_CFLAGS=	$(libucl_common_cflags) \
++libucl_config_la_CFLAGS=	$(libucl_common_cflags) \
+ 					@CURL_CFLAGS@
+-libucl_la_LDFLAGS = -version-info @SO_VERSION@
+-libucl_la_LIBADD=	@LIBFETCH_LIBS@ \
++libucl_config_la_LDFLAGS = -version-info @SO_VERSION@
++libucl_config_la_LIBADD=	@LIBFETCH_LIBS@ \
+ 					@LIBCRYPTO_LIB@ \
+ 					@LIBREGEX_LIB@ \
+ 					@CURL_LIBS@
+diff -aur libucl-0.7.3-old/tests/Makefile.am libucl-0.7.3/tests/Makefile.am
+--- libucl-0.7.3-old/tests/Makefile.am	2016-02-11 14:10:25.127564925 -0500
++++ libucl-0.7.3/tests/Makefile.am	2016-02-11 14:10:44.609565868 -0500
+@@ -13,7 +13,7 @@
+ common_test_cflags = -I$(top_srcdir)/include \
+ 					-I$(top_srcdir)/src \
+ 					-I$(top_srcdir)/uthash
+-common_test_ldadd = $(top_builddir)/src/libucl.la
++common_test_ldadd = $(top_builddir)/src/libucl-config.la
+ 
+ test_basic_SOURCES = test_basic.c
+ test_basic_LDADD = $(common_test_ldadd)
+@@ -35,4 +35,4 @@
+ test_streamline_LDADD = $(common_test_ldadd)
+ test_streamline_CFLAGS = $(common_test_cflags)
+ 
+-check_PROGRAMS = test_basic test_speed test_generate test_schema test_streamline
+\ No newline at end of file
++check_PROGRAMS = test_basic test_speed test_generate test_schema test_streamline
+diff -aur libucl-0.7.3-old/utils/Makefile.am libucl-0.7.3/utils/Makefile.am
+--- libucl-0.7.3-old/utils/Makefile.am	2016-02-11 14:10:25.133564925 -0500
++++ libucl-0.7.3/utils/Makefile.am	2016-02-11 14:11:00.707566647 -0500
+@@ -1,7 +1,7 @@
+ common_utils_cflags = -I$(top_srcdir)/include \
+ 					-I$(top_srcdir)/src \
+ 					-I$(top_srcdir)/uthash
+-common_utils_ldadd = $(top_builddir)/src/libucl.la
++common_utils_ldadd = $(top_builddir)/src/libucl-config.la
+ 
+ ucl_chargen_SOURCES = chargen.c
+ ucl_chargen_LDADD = $(common_utils_ldadd)
+@@ -16,4 +16,4 @@
+ else
+ UTL =
+ endif
+-bin_PROGRAMS = $(UTL)
+\ No newline at end of file
++bin_PROGRAMS = $(UTL)
