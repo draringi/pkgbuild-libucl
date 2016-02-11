@@ -1,4 +1,4 @@
-# Maintainer: Michael Williams <michael@mgwsoftware.com>
+# Maintainer: Michael Williams <archlinux@draringi.net>
 pkgname=libucl
 pkgver=0.7.3
 pkgrel=1
